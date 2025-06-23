@@ -27,10 +27,6 @@ public class DevDataService {
 
     @Autowired
     private PrisustvoRepository prisustvoRepo;
-    
-    @Autowired
-    private RadionicaRepository radionicaRepository;
-
 
     private final Faker faker = new Faker(new Locale("hr"));
     private final Random rand = new Random();
@@ -63,63 +59,48 @@ public class DevDataService {
         }
     }
 
-public void generirajRadionice(int broj) {
-    List<String> nazivi = List.of(
-            "Uvod u volonterstvo", "Digitalne vještine za mlade",
-            "Psihološko osnaživanje", "Zeleni aktivizam", "Medijska pismenost",
-            "Radionica kreativnog pisanja", "Osnove financijske pismenosti",
-            "Mentalno zdravlje mladih", "Rodna ravnopravnost", "Kritičko razmišljanje i dijalog"
-    );
-
-    List<String> opisi = List.of(
-            "Radionica osnažuje sudionike za aktivno volontiranje u zajednici.",
-            "Uči osnovne digitalne vještine kroz praktičan rad i suradnju.",
-            "Fokus na osobni rast, samopouzdanje i emocionalnu otpornost.",
-            "Podizanje svijesti o klimatskim promjenama i održivim praksama.",
-            "Analiziramo medije i razvijamo kritički pristup informacijama.",
-            "Sudionici razvijaju kreativno izražavanje i komunikacijske vještine.",
-            "Osnove upravljanja osobnim financijama kroz praktične zadatke.",
-            "Kako prepoznati stres i unaprijediti mentalno zdravlje.",
-            "Razumijevanje rodnih uloga i borba protiv stereotipa.",
-            "Razvijamo sposobnosti argumentacije i konstruktivne rasprave."
-    );
-
-    for (int i = 0; i < broj; i++) {
-        Radionica r = new Radionica();
-        int index = i % nazivi.size(); // koristi se kružno ako je broj > 10
-        r.setNaziv(nazivi.get(index));
-        r.setOpis(opisi.get(index));
-        r.setDatum(LocalDate.now().plusDays(i)); // svaka nova je na drugi dan
-        r.setTrajanje(2 + (i % 3)); // trajanje 2–4 sata
-        radionicaRepository.save(r);
+    public void generirajRadionice(int broj) {
+        for (int i = 0; i < broj; i++) {
+            Radionica r = new Radionica();
+            int index = i % hrvatskiNazivi.length;
+            r.setNaziv(hrvatskiNazivi[index]);
+            r.setOpis(hrvatskiOpisi[index]);
+            r.setDatum(LocalDate.now().plusDays(i)); // svaka nova je na drugi dan
+            r.setTrajanje(2 + (i % 3)); // trajanje 2–4 sata
+            radionicaRepo.save(r);
+        }
     }
-}
 
-public void generirajPrisustva(int n) {
-    List<Polaznik> polaznici = polaznikRepo.findAll();
-    List<Radionica> radionice = radionicaRepo.findAll();
+    /**
+     * Generira nasumična prisustva za postojeće polaznike i radionice.
+     * Ne koristi parametar n jer se generira za sve polaznike i radionice.
+     */
+    public void generirajPrisustva() {
+        List<Polaznik> polaznici = polaznikRepo.findAll();
+        List<Radionica> radionice = radionicaRepo.findAll();
 
-    PrisustvoStatus[] statusi = PrisustvoStatus.values();
+        PrisustvoStatus[] statusi = PrisustvoStatus.values();
 
-    for (Polaznik p : polaznici) {
-        for (Radionica r : radionice) {
-            if (rand.nextBoolean()) {
-                Prisustvo prisustvo = new Prisustvo();
-                prisustvo.setPolaznik(p);
-                prisustvo.setRadionica(r);
-                PrisustvoStatus randomStatus = statusi[rand.nextInt(statusi.length)];
-                prisustvo.setStatus(randomStatus);
-                prisustvoRepo.save(prisustvo);
+        for (Polaznik p : polaznici) {
+            for (Radionica r : radionice) {
+                if (rand.nextBoolean()) { // 50% šanse da će prisustvo biti kreirano
+                    Prisustvo prisustvo = new Prisustvo();
+                    prisustvo.setPolaznik(p);
+                    prisustvo.setRadionica(r);
+                    PrisustvoStatus randomStatus = statusi[rand.nextInt(statusi.length)];
+                    prisustvo.setStatus(randomStatus);
+                    prisustvoRepo.save(prisustvo);
+                }
             }
         }
     }
-}
 
-
-
-public void generirajSve(int brojPolaznika, int brojRadionica, int brojPrisustava) {
-    generirajPolaznike(brojPolaznika);
-    generirajRadionice(brojRadionica);
-    generirajPrisustva(brojPrisustava);
-}
+    /**
+     * Pokreće generiranje svih podataka - polaznika, radionica i prisustava.
+     */
+    public void generirajSve(int brojPolaznika, int brojRadionica) {
+        generirajPolaznike(brojPolaznika);
+        generirajRadionice(brojRadionica);
+        generirajPrisustva();
+    }
 }
