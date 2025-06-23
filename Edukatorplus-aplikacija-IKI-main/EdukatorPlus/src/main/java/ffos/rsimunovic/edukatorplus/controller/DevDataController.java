@@ -28,21 +28,20 @@ public class DevDataController {
         return "Uspješno generirano " + n + " radionica.";
     }
 
-    @Operation(summary = "Generiraj n prisustava")
-    @PostMapping("/prisustva/{n}")
-    public String generirajPrisustva(@PathVariable int n) {
-        devDataService.generirajPrisustva(n);
-        return "Uspješno generirano " + n + " prisustava.";
+    @Operation(summary = "Generiraj prisustva za sve polaznike i radionice")
+    @PostMapping("/prisustva")
+    public String generirajPrisustva() {
+        devDataService.generirajPrisustva();
+        return "Uspješno generirana prisustva za sve polaznike i radionice.";
     }
 
     @Operation(summary = "Generiraj sve (polaznike, radionice, prisustva)")
-    @PostMapping("/sve/{polaznici}/{radionice}/{prisustva}")
+    @PostMapping("/sve/{polaznici}/{radionice}")
     public String generirajSve(@PathVariable int polaznici,
-                               @PathVariable int radionice,
-                               @PathVariable int prisustva) {
+                               @PathVariable int radionice) {
         devDataService.generirajPolaznike(polaznici);
         devDataService.generirajRadionice(radionice);
-        devDataService.generirajPrisustva(prisustva);
-        return "Generirano: " + polaznici + " polaznika, " + radionice + " radionica, " + prisustva + " prisustava.";
+        devDataService.generirajPrisustva();
+        return "Generirano: " + polaznici + " polaznika, " + radionice + " radionica, prisustva za sve.";
     }
 }
