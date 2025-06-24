@@ -1,6 +1,7 @@
 package ffos.rsimunovic.edukatorplus.repository;
 
 import ffos.rsimunovic.edukatorplus.model.Prisustvo;
+import ffos.rsimunovic.edukatorplus.model.PrisustvoStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +13,6 @@ public interface PrisustvoRepository extends JpaRepository<Prisustvo, Long> {
     List<Prisustvo> findByRadionicaId(Long radionicaId);
     List<Prisustvo> findByRadionicaIdAndStatus(Long radionicaId, String status);
     Long countByRadionicaId(Long radionicaId);
+    List<Prisustvo> findByStatus(PrisustvoStatus status);
 
 }

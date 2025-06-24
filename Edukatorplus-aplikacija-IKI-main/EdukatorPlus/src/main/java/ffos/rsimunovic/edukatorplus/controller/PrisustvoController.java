@@ -78,4 +78,45 @@ public class PrisustvoController {
         }
         return ResponseEntity.ok(prisustva);
     }
+    
+    @Operation(summary = "Ažuriraj prisustvo po ID-u")
+@PutMapping("/{id}")
+public ResponseEntity<PrisustvoDTO> update(@PathVariable Long id, @RequestBody PrisustvoDTO dto) {
+    PrisustvoDTO updated = prisustvoService.update(id, dto);
+    if (updated == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    return ResponseEntity.ok(updated);
 }
+
+@Operation(summary = "Obriši prisustvo po ID-u")
+@DeleteMapping("/{id}")
+public ResponseEntity<Void> delete(@PathVariable Long id) {
+    boolean deleted = prisustvoService.delete(id);
+    if (!deleted) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    return ResponseEntity.noContent().build();
+}
+
+    @Operation(summary = "Dohvati prisustva po statusu")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Prisustva uspješno dohvaćena"),
+        @ApiResponse(responseCode = "400", description = "Neispravan status prisustva")
+    })
+    @GetMapping("/status")
+    public ResponseEntity<List<PrisustvoDTO>> getByStatus(@RequestParam String status) {
+        // Pokušavamo dohvatiti status u enumu
+        try {
+            List<PrisustvoDTO> lista = prisustvoService.getByStatus(status);
+            if (lista.isEmpty()) {
+                return ResponseEntity.noContent().build(); // 204 ako nema ništa
+            }
+            return ResponseEntity.ok(lista);
+        } catch (IllegalArgumentException ex) {
+            // Ako status nije validan enum, vrati 400 Bad Request
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+}
+

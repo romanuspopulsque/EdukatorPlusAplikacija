@@ -28,8 +28,8 @@ public class Polaznik {
 
     private String telefon;
 
-    @OneToMany(mappedBy = "polaznik", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Prisustvo> prisustva;
+@OneToMany(mappedBy = "polaznik")
+private List<Prisustvo> prisustva;
 
     // Getteri i setteri
     public Long getId() { return id; }

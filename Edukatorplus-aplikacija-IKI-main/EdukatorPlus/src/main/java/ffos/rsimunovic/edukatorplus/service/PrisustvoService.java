@@ -111,4 +111,38 @@ public PrisustvoDTO evidentirajPrisustvo(Long radionicaId, Long polaznikId, Stri
     return toDTO(saved);
 }
 
+public PrisustvoDTO update(Long id, PrisustvoDTO dto) {
+    Optional<Prisustvo> opt = prisustvoRepository.findById(id);
+    if (opt.isPresent()) {
+        Prisustvo p = opt.get();
+        // Pretpostavljam da možeš updateati samo status, ali možeš dodati i ostala polja ako trebaš
+        p.setStatus(dto.status());
+        Prisustvo saved = prisustvoRepository.save(p);
+        return toDTO(saved);
+    }
+    return null;
+}
+
+public boolean delete(Long id) {
+    Optional<Prisustvo> opt = prisustvoRepository.findById(id);
+    if (opt.isPresent()) {
+        prisustvoRepository.delete(opt.get());
+        return true;
+    }
+    return false;
+}
+
+public List<PrisustvoDTO> getByStatus(String statusStr) {
+    PrisustvoStatus status;
+    try {
+        status = PrisustvoStatus.valueOf(statusStr.toUpperCase());
+    } catch (IllegalArgumentException e) {
+        return List.of(); // ili baci exception, ovisno o logici
+    }
+
+    return prisustvoRepository.findByStatus(status).stream()
+            .map(this::toDTO)
+            .collect(Collectors.toList());
+}
+
 }
