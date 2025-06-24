@@ -107,4 +107,19 @@ public class RadionicaService {
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
+    
+    public RadionicaDTO update(Long id, RadionicaDTO dto) {
+    Optional<Radionica> opt = radionicaRepository.findById(id);
+    if (opt.isPresent()) {
+        Radionica r = opt.get();
+        r.setNaziv(dto.naziv());
+        r.setOpis(dto.opis());
+        r.setDatum(dto.datum());
+        r.setTrajanje(dto.trajanje());
+        Radionica saved = radionicaRepository.save(r);
+        return toDTO(saved);
+    }
+    return null;
+}
+
 }

@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/radionice")
@@ -89,6 +92,27 @@ public List<RadionicaDTO> pretraziPoDatumu(
     LocalDate datumDo = LocalDate.parse(doDatuma);
     return radionicaService.pretraziPoDatumu(datumOd, datumDo);
 }
+
+@Operation(summary = "Ažuriraj radionicu po ID-u")
+@PutMapping("/{id}")
+public ResponseEntity<RadionicaDTO> update(@PathVariable Long id, @RequestBody RadionicaDTO dto) {
+    RadionicaDTO updated = radionicaService.update(id, dto);
+    if (updated == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    return ResponseEntity.ok(updated);
+}
+
+@Operation(summary = "Dohvati statistiku prisutnosti za radionicu")
+@GetMapping("/{id}/statistika")
+public ResponseEntity<Map<String, Long>> getStatistika(@PathVariable Long id) {
+    Map<String, Long> statistika = radionicaService.getStatistika(id);
+    if (statistika == null || statistika.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    return ResponseEntity.ok(statistika);
+}
+
 
 
 }

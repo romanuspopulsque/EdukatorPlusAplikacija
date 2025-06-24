@@ -27,8 +27,9 @@ public class Radionica {
 
     private int trajanje; // u satima
 
-    @OneToMany(mappedBy = "radionica", cascade = CascadeType.ALL)
-    private List<Prisustvo> prisustva;
+@OneToMany(mappedBy = "radionica")
+private List<Prisustvo> prisustva;
+
 
     // Getteri i setteri
     public Long getId() { return id; }
