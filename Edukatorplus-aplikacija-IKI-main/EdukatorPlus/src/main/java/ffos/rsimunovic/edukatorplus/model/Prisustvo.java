@@ -26,7 +26,7 @@ public class Prisustvo {
     private Polaznik polaznik;
 
     @Enumerated(EnumType.STRING)
-    private PrisustvoStatus status;  // ⬅️ sad koristi enum
+    private PrisustvoStatus status;  
 
     // Getteri i setteri
     public Long getId() { return id; }
