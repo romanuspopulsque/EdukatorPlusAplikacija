@@ -1,6 +1,8 @@
 ffos\rsimunovic\edukatorplus\service\PolaznikService.class
 ffos\rsimunovic\edukatorplus\service\DevDataService.class
 ffos\rsimunovic\edukatorplus\repository\RadionicaRepository.class
+ffos\rsimunovic\edukatorplus\controller\AnalitikaController.class
+ffos\rsimunovic\edukatorplus\service\AnalitikaService.class
 ffos\rsimunovic\edukatorplus\controller\PolaznikController.class
 ffos\rsimunovic\edukatorplus\DTO\PrisustvoDTO.class
 ffos\rsimunovic\edukatorplus\DTO\RadionicaDTO.class
