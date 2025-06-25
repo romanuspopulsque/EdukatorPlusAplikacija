@@ -88,10 +88,6 @@ public List<PolaznikDTO> pretraziPoEmailu(@RequestParam(required = false) String
     return polaznikService.pretraziPoEmailu(email);
 }
 
-@GetMapping("/")
-public String home() {
-    return "Aplikacija je online i radi!";  // Ili možeš vratiti neki JSON ili redirect
-}
 
 
 
