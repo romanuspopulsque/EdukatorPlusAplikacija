@@ -16,9 +16,11 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+@CrossOrigin(origins = "https://edukatorplusaplikacija-3.onrender.com")
 @RestController
 @RequestMapping("/api/radionice")
 public class RadionicaController {
+
 
     @Autowired
     private RadionicaService radionicaService;

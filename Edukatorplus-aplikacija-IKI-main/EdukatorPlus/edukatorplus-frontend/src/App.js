@@ -135,7 +135,29 @@ function App() {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold mb-4">Evidencija prisustva</h1>
-      {/* UI forms and lists unchanged */}
+
+      <div className="mt-4">
+        <h2 className="text-xl font-semibold mb-2">Polaznici</h2>
+        <ul className="list-disc pl-5">
+          {polaznici.map(p => (
+            <li key={p.id}>{p.ime} {p.prezime}</li>
+          ))}
+        </ul>
+
+        <h2 className="text-xl font-semibold mt-4 mb-2">Radionice</h2>
+        <ul className="list-disc pl-5">
+          {radionice.map(r => (
+            <li key={r.id}>{r.naziv} ({r.datum})</li>
+          ))}
+        </ul>
+
+        <h2 className="text-xl font-semibold mt-4 mb-2">Prisustva</h2>
+        <ul className="list-disc pl-5">
+          {prisustva.map(pr => (
+            <li key={pr.id}>Polaznik #{pr.polaznikId} - Radionica #{pr.radionicaId}: {pr.status}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

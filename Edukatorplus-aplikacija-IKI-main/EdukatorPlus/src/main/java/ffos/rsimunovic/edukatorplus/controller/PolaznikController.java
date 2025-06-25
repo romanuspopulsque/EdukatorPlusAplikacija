@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "https://edukatorplusaplikacija-3.onrender.com")
 @RestController
 @RequestMapping("/api/polaznici")
 public class PolaznikController {
@@ -57,38 +58,35 @@ public class PolaznikController {
     public void delete(@PathVariable Long id) {
         polaznikService.delete(id);
     }
-    
+
     @Operation(summary = "Pretraga polaznika po imenu i/ili prezimenu")
-@GetMapping("/pretraga")
-public List<PolaznikDTO> pretrazi(
-        @RequestParam(required = false) String ime,
-        @RequestParam(required = false) String prezime) {
-    return polaznikService.pretraziPoImenuIPrezimenu(ime, prezime);
-}
+    @GetMapping("/pretraga")
+    public List<PolaznikDTO> pretrazi(
+            @RequestParam(required = false) String ime,
+            @RequestParam(required = false) String prezime) {
+        return polaznikService.pretraziPoImenuIPrezimenu(ime, prezime);
+    }
 
-@Operation(summary = "Ažuriraj polaznika po ID-u")
-@PutMapping("/{id}")
-public PolaznikDTO update(@PathVariable Long id, @RequestBody PolaznikDTO dto) {
-    return polaznikService.update(id, dto);
-}
+    @Operation(summary = "Ažuriraj polaznika po ID-u")
+    @PutMapping("/{id}")
+    public PolaznikDTO update(@PathVariable Long id, @RequestBody PolaznikDTO dto) {
+        return polaznikService.update(id, dto);
+    }
 
-@Operation(summary = "Dohvati prisustva za polaznika")
-@GetMapping("/{id}/prisustva")
-public List<PrisustvoDTO> getPrisustvaZaPolaznika(@PathVariable Long id) {
-    return polaznikService.getPrisustvaZaPolaznika(id);
-}
+    @Operation(summary = "Dohvati prisustva za polaznika")
+    @GetMapping("/{id}/prisustva")
+    public List<PrisustvoDTO> getPrisustvaZaPolaznika(@PathVariable Long id) {
+        return polaznikService.getPrisustvaZaPolaznika(id);
+    }
 
-@Operation(summary = "Pretraga polaznika po emailu")
-@ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Rezultati pronađeni"),
-    @ApiResponse(responseCode = "400", description = "Neispravan upit")
-})
-@GetMapping("/pretraga/email")
-public List<PolaznikDTO> pretraziPoEmailu(@RequestParam(required = false) String email) {
-    return polaznikService.pretraziPoEmailu(email);
-}
-
-
-
+    @Operation(summary = "Pretraga polaznika po emailu")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Rezultati pronađeni"),
+        @ApiResponse(responseCode = "400", description = "Neispravan upit")
+    })
+    @GetMapping("/pretraga/email")
+    public List<PolaznikDTO> pretraziPoEmailu(@RequestParam(required = false) String email) {
+        return polaznikService.pretraziPoEmailu(email);
+    }
 
 }

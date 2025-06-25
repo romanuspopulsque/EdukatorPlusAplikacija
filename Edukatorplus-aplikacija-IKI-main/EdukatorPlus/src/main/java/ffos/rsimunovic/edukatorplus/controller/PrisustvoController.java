@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "https://edukatorplusaplikacija-3.onrender.com")
 @RestController
 @RequestMapping("/api/prisustva")
 public class PrisustvoController {
+
 
     @Autowired
     private PrisustvoService prisustvoService;
