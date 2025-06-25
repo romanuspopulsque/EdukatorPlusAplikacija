@@ -5,6 +5,7 @@ const API_URL = "https://edukatorplusaplikacija-2.onrender.com";
 function App() {
   const [polaznici, setPolaznici] = useState([]);
   const [radionice, setRadionice] = useState([]);
+  const [prisustva, setPrisustva] = useState([]);
   const [status, setStatus] = useState("PRISUTAN");
   const [polaznikId, setPolaznikId] = useState("");
   const [radionicaId, setRadionicaId] = useState("");
@@ -25,6 +26,14 @@ function App() {
       })
       .then(setRadionice)
       .catch((err) => console.error(err));
+
+    fetch(`${API_URL}/api/prisustva`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Greška kod dohvaćanja prisustava");
+        return res.json();
+      })
+      .then(setPrisustva)
+      .catch((err) => console.error(err));
   }, []);
 
   const handleEvidentiraj = () => {
@@ -37,8 +46,15 @@ function App() {
       method: "POST",
     })
       .then((res) => {
-        if (res.ok) alert("Prisustvo evidentirano!");
-        else alert("Greška pri evidenciji.");
+        if (res.ok) {
+          alert("Prisustvo evidentirano!");
+          // Osvježi listu prisustava odmah
+          return fetch(`${API_URL}/api/prisustva`)
+            .then((res) => res.json())
+            .then(setPrisustva);
+        } else {
+          alert("Greška pri evidenciji.");
+        }
       })
       .catch((err) => {
         console.error("Greška kod slanja prisustva:", err);
@@ -47,7 +63,7 @@ function App() {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
+    <div className="p-6 max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold mb-4">Evidencija prisustva</h1>
 
       <select
@@ -83,6 +99,8 @@ function App() {
       >
         <option value="PRISUTAN">PRISUTAN</option>
         <option value="ODSUTAN">ODSUTAN</option>
+        <option value="OPRAVDANO">OPRAVDANO</option>
+        <option value="NEOPRAVDANO">NEOPRAVDANO</option>
       </select>
 
       <button
@@ -91,6 +109,42 @@ function App() {
       >
         Evidentiraj prisustvo
       </button>
+
+      {/* Prikaz prisustava */}
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold mb-2">Evidentirana prisustva</h2>
+        <ul className="list-disc pl-5">
+          {prisustva.map((p) => (
+            <li key={p.id}>
+              Polaznik ID: {p.polaznik?.id}, Radionica ID: {p.radionica?.id}, Status: {p.status}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Prikaz svih polaznika */}
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold mb-2">Svi polaznici</h2>
+        <ul className="list-disc pl-5">
+          {polaznici.map((p) => (
+            <li key={p.id}>
+              {p.ime} {p.prezime} – {p.email}, {p.telefon}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Prikaz svih radionica */}
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold mb-2">Sve radionice</h2>
+        <ul className="list-disc pl-5">
+          {radionice.map((r) => (
+            <li key={r.id}>
+              {r.naziv} – {r.opis} ({r.datum}, {r.trajanje}h)
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
