@@ -9,58 +9,80 @@ function App() {
   const [status, setStatus] = useState("PRISUTAN");
   const [polaznikId, setPolaznikId] = useState("");
   const [radionicaId, setRadionicaId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetch(`${API_URL}/api/polaznici`)
-      .then((res) => {
+  // Funkcija za dohvat svih podataka
+  const fetchData = () => {
+    setLoading(true);
+    setError(null);
+
+    Promise.all([
+      fetch(`${API_URL}/api/polaznici`).then((res) => {
         if (!res.ok) throw new Error("Greška kod dohvaćanja polaznika");
         return res.json();
-      })
-      .then(setPolaznici)
-      .catch((err) => console.error(err));
-
-    fetch(`${API_URL}/api/radionice`)
-      .then((res) => {
+      }),
+      fetch(`${API_URL}/api/radionice`).then((res) => {
         if (!res.ok) throw new Error("Greška kod dohvaćanja radionica");
         return res.json();
-      })
-      .then(setRadionice)
-      .catch((err) => console.error(err));
-
-    fetch(`${API_URL}/api/prisustva`)
-      .then((res) => {
+      }),
+      fetch(`${API_URL}/api/prisustva`).then((res) => {
         if (!res.ok) throw new Error("Greška kod dohvaćanja prisustava");
         return res.json();
+      }),
+    ])
+      .then(([polazniciData, radioniceData, prisustvaData]) => {
+        setPolaznici(polazniciData);
+        setRadionice(radioniceData);
+        setPrisustva(prisustvaData);
       })
-      .then(setPrisustva)
-      .catch((err) => console.error(err));
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const handleEvidentiraj = () => {
+    if (!polaznikId || !radionicaId) {
+      alert("Molimo odaberite polaznika i radionicu!");
+      return;
+    }
+
     const params = new URLSearchParams({
       polaznikId,
       radionicaId,
       status,
     });
+
     fetch(`${API_URL}/api/prisustva/evidentiraj?${params.toString()}`, {
       method: "POST",
+      credentials: "include", // ako backend koristi cookie autentikaciju, inače možeš maknuti
     })
       .then((res) => {
         if (res.ok) {
           alert("Prisustvo evidentirano!");
-          // Osvježi listu prisustava odmah
-          return fetch(`${API_URL}/api/prisustva`)
-            .then((res) => res.json())
-            .then(setPrisustva);
+          fetchData(); // osvježi podatke nakon evidentiranja
+          // resetiraj inpute ako želiš
+          setPolaznikId("");
+          setRadionicaId("");
+          setStatus("PRISUTAN");
         } else {
-          alert("Greška pri evidenciji.");
+          return res.json().then((data) => {
+            throw new Error(data.message || "Greška pri evidenciji.");
+          });
         }
       })
       .catch((err) => {
         console.error("Greška kod slanja prisustva:", err);
-        alert("Greška pri evidenciji.");
+        alert(err.message);
       });
   };
+
+  if (loading) return <div className="p-6 max-w-3xl mx-auto">Učitavanje...</div>;
+
+  if (error) return <div className="p-6 max-w-3xl mx-auto text-red-600">Greška: {error}</div>;
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
@@ -104,8 +126,9 @@ function App() {
       </select>
 
       <button
-        className="bg-blue-600 text-white px-4 py-2 rounded"
+        className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
         onClick={handleEvidentiraj}
+        disabled={!polaznikId || !radionicaId}
       >
         Evidentiraj prisustvo
       </button>
@@ -114,9 +137,10 @@ function App() {
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-2">Evidentirana prisustva</h2>
         <ul className="list-disc pl-5">
+          {prisustva.length === 0 && <li>Još nema evidentiranih prisustava.</li>}
           {prisustva.map((p) => (
             <li key={p.id}>
-              Polaznik ID: {p.polaznik?.id}, Radionica ID: {p.radionica?.id}, Status: {p.status}
+              Polaznik: {p.polaznik?.ime} {p.polaznik?.prezime} | Radionica: {p.radionica?.naziv} | Status: {p.status}
             </li>
           ))}
         </ul>
@@ -126,6 +150,7 @@ function App() {
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-2">Svi polaznici</h2>
         <ul className="list-disc pl-5">
+          {polaznici.length === 0 && <li>Nema polaznika u bazi.</li>}
           {polaznici.map((p) => (
             <li key={p.id}>
               {p.ime} {p.prezime} – {p.email}, {p.telefon}
@@ -138,6 +163,7 @@ function App() {
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-2">Sve radionice</h2>
         <ul className="list-disc pl-5">
+          {radionice.length === 0 && <li>Nema radionica u bazi.</li>}
           {radionice.map((r) => (
             <li key={r.id}>
               {r.naziv} – {r.opis} ({r.datum}, {r.trajanje}h)
