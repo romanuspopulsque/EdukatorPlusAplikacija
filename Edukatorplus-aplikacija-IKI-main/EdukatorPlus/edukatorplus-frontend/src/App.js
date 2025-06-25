@@ -11,14 +11,20 @@ function App() {
 
   useEffect(() => {
     fetch(`${API_URL}/api/polaznici`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Greška kod dohvaćanja polaznika");
+        return res.json();
+      })
       .then(setPolaznici)
-      .catch((err) => console.error("Greška kod dohvaćanja polaznika:", err));
+      .catch((err) => console.error(err));
 
     fetch(`${API_URL}/api/radionice`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Greška kod dohvaćanja radionica");
+        return res.json();
+      })
       .then(setRadionice)
-      .catch((err) => console.error("Greška kod dohvaćanja radionica:", err));
+      .catch((err) => console.error(err));
   }, []);
 
   const handleEvidentiraj = () => {
