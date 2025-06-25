@@ -1,15 +1,19 @@
--- Polaznici
-INSERT INTO polaznik (ime, prezime, godina_rodenja, email, telefon) VALUES
-('Ivan', 'Ivić', 1995, 'ivan.ivic@example.com', '0911234567'),
-('Ana', 'Anić', 1997, 'ana.anic@example.com', '0987654321');
+-- Ubacivanje polaznika
+INSERT INTO polaznik (id, ime, prezime, godina_rodenja, email, telefon)
+VALUES 
+  (1, 'Ivan', 'Ivić', 1999, 'ivan.ivic@example.com', '0911234567'),
+  (2, 'Ana', 'Anić', 2000, 'ana.anic@example.com', '0927654321');
 
--- Radionice
-INSERT INTO radionica (naziv, opis, datum, trajanje) VALUES
-('React osnove', 'Uvod u React framework', '2025-07-01', 4),
-('Spring Boot napredno', 'Napredne tehnike u Spring Bootu', '2025-08-15', 6);
+-- Ubacivanje radionica
+INSERT INTO radionica (id, naziv, opis, datum, trajanje)
+VALUES 
+  (1, 'Uvod u React', 'Osnove razvoja React aplikacija', '2025-07-01', 3),
+  (2, 'Spring Boot API', 'Izrada REST API-ja u Spring Bootu', '2025-08-15', 4);
 
--- Prisustva
--- Pretpostavljamo da su ID-evi polaznika i radionica auto-generated i krenu od 1 redom kako su ubaceni
-INSERT INTO prisustvo (radionica_id, polaznik_id, status) VALUES
-(1, 1, 'PRISUTAN'),
-(2, 2, 'ODSUTAN');
+-- Ubacivanje prisustva (PRISUTAN i ODSUTAN su enum vrijednosti)
+INSERT INTO prisustvo (id, polaznik_id, radionica_id, status)
+VALUES 
+  (1, 1, 1, 'PRISUTAN'),
+  (2, 2, 1, 'ODSUTAN'),
+  (3, 1, 2, 'OPRAVDANO'),
+  (4, 2, 2, 'NEOPRAVDANO');
