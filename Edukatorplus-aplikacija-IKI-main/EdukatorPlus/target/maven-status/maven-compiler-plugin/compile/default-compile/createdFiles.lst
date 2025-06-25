@@ -5,11 +5,11 @@ ffos\rsimunovic\edukatorplus\DTO\RadionicaDTO.class
 ffos\rsimunovic\edukatorplus\repository\PolaznikRepository.class
 ffos\rsimunovic\edukatorplus\model\PrisustvoStatus.class
 ffos\rsimunovic\edukatorplus\repository\PrisustvoRepository.class
-ffos\rsimunovic\edukatorplus\Start.class
 ffos\rsimunovic\edukatorplus\config\CorsConfig.class
 ffos\rsimunovic\edukatorplus\service\RadionicaService.class
 ffos\rsimunovic\edukatorplus\model\Prisustvo.class
 ffos\rsimunovic\edukatorplus\DTO\PolaznikDTO.class
+ffos\rsimunovic\edukatorplus\EdukatorPlusApplication.class
 ffos\rsimunovic\edukatorplus\controller\RadionicaController.class
 ffos\rsimunovic\edukatorplus\repository\RadionicaRepository.class
 ffos\rsimunovic\edukatorplus\controller\AnalitikaController.class
