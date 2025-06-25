@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+const API_URL = "https://edukatorplusaplikacija-2.onrender.com";
+
 function App() {
   const [polaznici, setPolaznici] = useState([]);
   const [radionice, setRadionice] = useState([]);
@@ -8,13 +10,15 @@ function App() {
   const [radionicaId, setRadionicaId] = useState("");
 
   useEffect(() => {
-    fetch("/api/polaznici")
+    fetch(`${API_URL}/api/polaznici`)
       .then((res) => res.json())
-      .then(setPolaznici);
+      .then(setPolaznici)
+      .catch((err) => console.error("Greška kod dohvaćanja polaznika:", err));
 
-    fetch("/api/radionice")
+    fetch(`${API_URL}/api/radionice`)
       .then((res) => res.json())
-      .then(setRadionice);
+      .then(setRadionice)
+      .catch((err) => console.error("Greška kod dohvaćanja radionica:", err));
   }, []);
 
   const handleEvidentiraj = () => {
@@ -23,12 +27,16 @@ function App() {
       radionicaId,
       status,
     });
-    fetch(`/api/prisustva/evidentiraj?${params.toString()}`, {
+    fetch(`${API_URL}/api/prisustva/evidentiraj?${params.toString()}`, {
       method: "POST",
     })
       .then((res) => {
         if (res.ok) alert("Prisustvo evidentirano!");
         else alert("Greška pri evidenciji.");
+      })
+      .catch((err) => {
+        console.error("Greška kod slanja prisustva:", err);
+        alert("Greška pri evidenciji.");
       });
   };
 
