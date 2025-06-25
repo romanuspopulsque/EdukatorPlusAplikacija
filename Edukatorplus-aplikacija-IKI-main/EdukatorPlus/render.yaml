@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: edukatorplus
+    env: docker
+    dockerfilePath: Dockerfile
+    port: 8080
+    autoDeploy: true
+
