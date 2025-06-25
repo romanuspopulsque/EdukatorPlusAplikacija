@@ -15,9 +15,12 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                     .allowedOrigins("https://edukatorplusaplikacija-3.onrender.com")
-                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true);
             }
         };
     }
 }
+
 
